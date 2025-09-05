@@ -6,6 +6,8 @@ This is a [mask](https://github.com/jacobdeichert/mask) task runner file.
 
 - [Maskfile](#maskfile)
   - [hello](#hello)
+  - [test](#test)
+  - [greet [name]](#greet-name)
 
 <!-- mdformat-toc end -->
 
@@ -15,4 +17,21 @@ This is a [mask](https://github.com/jacobdeichert/mask) task runner file.
 
 ```bash
 echo "Hello World!"
+```
+
+## test
+
+> Run Go unit tests
+
+```bash
+go test ./...
+```
+
+## greet [name]
+
+> Run CLI greeting. Usage: `mask greet Alice` or `mask greet`
+
+```bash
+NAME=${name:-World}
+go run ./src/adapters/driving "$NAME"
 ```

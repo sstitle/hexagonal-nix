@@ -66,9 +66,28 @@ nix fmt
 
 ```
 .
-├── flake.nix          # Nix flake configuration
-├── treefmt.nix        # Formatter configuration
-├── maskfile.md        # Task definitions
-├── .envrc             # direnv configuration
-└── README.md          # This file
+├── flake.nix                  # Nix flake configuration
+├── treefmt.nix                # Formatter configuration
+├── maskfile.md                # Task definitions
+├── .envrc                     # direnv configuration
+├── README.md                  # This file
+└── src                        # Hexagonal example in Go
+    ├── domain                 # Ports (interfaces)
+    │   └── ports.go
+    ├── app                    # Use case implementation + tests
+    │   ├── greet_service.go
+    │   └── greet_service_test.go
+    └── adapters
+        ├── driven             # Output adapters
+        │   └── console_presenter.go
+        └── driving            # Input adapters (entrypoints)
+            └── main.go
+```
+
+### Run
+
+```
+nix develop
+mask test
+mask greet Alice
 ```

@@ -33,7 +33,23 @@
               echo "Hello, world from Flake!"
             '';
           };
+          # App runner to execute the Go CLI (driving adapter)
+          packages.greet = pkgs.writeShellApplication {
+            name = "greet";
+            runtimeInputs = [ pkgs.go ];
+            text = ''
+              # run from repo root
+              exec go run ./src/adapters/driving "$@"
+            '';
+          };
           packages.default = self'.packages.hello;
+
+          # nix run . [args] will run the Go CLI
+          apps.greet = {
+            type = "app";
+            program = "${self'.packages.greet}/bin/greet";
+          };
+          apps.default = self'.apps.greet;
 
           # Development shell with nickel and mask
           devShells.default = pkgs.mkShell {
@@ -60,7 +76,8 @@
               echo ""
               echo "Run 'mask --help' to see available tasks."
               echo "Run 'nix fmt' to format all files."
-              echo "Run 'go run src/main.go' to test the application."
+              echo "Run 'mask greet Alice' to demo the Go hexagonal example."
+              echo "Run 'nix run . -- Alice' to run via flake app."
             '';
           };
 

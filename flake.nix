@@ -21,25 +21,19 @@
       ];
 
       perSystem =
-        { config, pkgs, ... }:
+        { config, self', inputs', pkgs, system, ... }:
         let
           treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
         in
         {
           # Go package for user profile system
-          packages.user-tui-json = pkgs.buildGoModule {
-            pname = "user-tui-json";
-            version = "0.1.0";
-            src = ./src;
-            
-            vendorHash = null;
-            
-            meta = with pkgs.lib; {
-              description = "User Profile System - TUI with JSON storage";
-              homepage = "https://github.com/samtitle/hexagonal-nix";
-              license = licenses.mit;
-            };
+          packages.hello = pkgs.writeShellApplication {
+            name = "hello";
+            text = ''
+              echo "Hello, world from Flake!"
+            '';
           };
+          packages.default = self'.packages.hello;
 
           # Development shell with nickel and mask
           devShells.default = pkgs.mkShell {

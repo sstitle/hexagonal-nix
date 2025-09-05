@@ -26,6 +26,21 @@
           treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
         in
         {
+          # Go package for user profile system
+          packages.user-tui-json = pkgs.buildGoModule {
+            pname = "user-tui-json";
+            version = "0.1.0";
+            src = ./src;
+            
+            vendorHash = null;
+            
+            meta = with pkgs.lib; {
+              description = "User Profile System - TUI with JSON storage";
+              homepage = "https://github.com/samtitle/hexagonal-nix";
+              license = licenses.mit;
+            };
+          };
+
           # Development shell with nickel and mask
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
@@ -33,6 +48,12 @@
               git
               nickel
               mask
+              
+              # Go development
+              go
+              gopls
+              gotools
+              go-tools
             ];
 
             shellHook = ''
@@ -40,9 +61,12 @@
               echo "Available tools:"
               echo "  - nickel: Configuration language"
               echo "  - mask: Task runner"
+              echo "  - go: Go development"
+              echo "  - gopls: Go language server"
               echo ""
               echo "Run 'mask --help' to see available tasks."
               echo "Run 'nix fmt' to format all files."
+              echo "Run 'go run src/main.go' to test the application."
             '';
           };
 

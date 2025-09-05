@@ -1,0 +1,11 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+- This is a repo that is organized using Hexagonal Architecture and Nix flakes.
+- 'maskfile.md' provides convenient commands that are quick and easy to run.
+- Use Nickel lang for complex configurations that need to be output to JSON/YAML/TOML files.
+- Use nushell for better JSON manipulation and safer shell scripting.
+

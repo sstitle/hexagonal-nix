@@ -7,7 +7,9 @@ This is a [mask](https://github.com/jacobdeichert/mask) task runner file.
 - [Maskfile](#maskfile)
   - [hello](#hello)
   - [test](#test)
-  - [greet [name]](#greet-name)
+  - [greet](#greet)
+  - [tea](#tea)
+  - [serve [port]](#serve-port)
 
 <!-- mdformat-toc end -->
 
@@ -27,11 +29,27 @@ echo "Hello World!"
 go test ./...
 ```
 
-## greet [name]
+## greet
 
-> Run CLI greeting. Usage: `mask greet Alice` or `mask greet`
+> Run CLI greeting (prompts for name)
 
 ```bash
-NAME=${name:-World}
-go run ./src/adapters/driving "$NAME"
+go run ./src/adapters/driving/main.go
+```
+
+## tea
+
+> Run Bubble Tea greeting UI (prompts for name)
+
+```bash
+go run ./src/adapters/driving/tea_main.go
+```
+
+## serve [port]
+
+> Run HTTP server with greeting form
+
+```bash
+PORT=${port:-8080}
+PORT="$PORT" go run ./src/adapters/driving/http_main.go
 ```

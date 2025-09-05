@@ -39,7 +39,28 @@
             runtimeInputs = [ pkgs.go ];
             text = ''
               # run from repo root
-              exec go run ./src/adapters/driving "$@"
+              # Explicitly run only the plain CLI main to avoid multiple main conflicts
+              exec go run ./src/adapters/driving/main.go "$@"
+            '';
+          };
+          # Bubble Tea app
+          packages.tea = pkgs.writeShellApplication {
+            name = "tea";
+            runtimeInputs = [ pkgs.go ];
+            text = ''
+              exec go run ./src/adapters/driving/tea_main.go "$@"
+            '';
+          };
+          # HTTP server app
+          packages.serve = pkgs.writeShellApplication {
+            name = "serve";
+            runtimeInputs = [ pkgs.go ];
+            text = ''
+              # If a positional arg is provided, treat it as PORT
+              if [ -n "$1" ]; then
+                export PORT="$1"
+              fi
+              exec go run ./src/adapters/driving/http_main.go
             '';
           };
           packages.default = self'.packages.hello;
@@ -50,6 +71,14 @@
             program = "${self'.packages.greet}/bin/greet";
           };
           apps.default = self'.apps.greet;
+          apps.tea = {
+            type = "app";
+            program = "${self'.packages.tea}/bin/tea";
+          };
+          apps.serve = {
+            type = "app";
+            program = "${self'.packages.serve}/bin/serve";
+          };
 
           # Development shell with nickel and mask
           devShells.default = pkgs.mkShell {
@@ -77,7 +106,10 @@
               echo "Run 'mask --help' to see available tasks."
               echo "Run 'nix fmt' to format all files."
               echo "Run 'mask greet Alice' to demo the Go hexagonal example."
-              echo "Run 'nix run . -- Alice' to run via flake app."
+              echo "Run 'nix run . -- Alice' to run CLI via flake app."
+              echo "Run 'nix run .#tea -- Alice' for Bubble Tea presenter."
+              echo "Run 'nix run .#serve' then open http://localhost:8080 ."
+              echo "Run 'nix run .#serve -- 8001' to choose a custom port."
             '';
           };
 
